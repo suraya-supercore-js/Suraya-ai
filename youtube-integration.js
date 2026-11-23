@@ -4,11 +4,11 @@
 const YouTubeIntegration = (function(){
   async function fetchChannelStats(apiKey, channelId){
     if(!apiKey) throw new Error('API key required');
+    if(!/^UC[A-Za-z0-9_-]{22}$/.test(channelId)) throw new Error('Invalid YouTube channel ID');
     const url = `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=${encodeURIComponent(channelId)}&key=${encodeURIComponent(apiKey)}`;
-    const res = await fetch(url);
+    const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
     if(!res.ok) {
-      const txt = await res.text();
-      throw new Error('YouTube API error: ' + txt);
+      throw new Error('YouTube API request failed with HTTP ' + res.status);
     }
     const data = await res.json();
     if(!data.items || data.items.length === 0) throw new Error('Channel not found');

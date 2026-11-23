@@ -2,7 +2,6 @@
 (function(){
   const KEY = 'suraya_ledger_v1';
   const LAST_WORK_KEY = 'suraya_last_work_v1';
-  const ADMIN_KEY = 'suraya_admin_pass_v1'; // stored locally for prototype only
 
   function nowISO(){ return new Date().toISOString(); }
 
@@ -46,11 +45,6 @@
 
     updateLastWorkTimestamp(){ localStorage.setItem(LAST_WORK_KEY, ''+Date.now()); },
 
-    // Admin password helpers (prototype-only; stored locally)
-    isAdminSet(){ return !!localStorage.getItem(ADMIN_KEY); },
-    setAdminPassword(pass){ if(!pass) return false; localStorage.setItem(ADMIN_KEY, pass); return true; },
-    getAdminPassword(){ return localStorage.getItem(ADMIN_KEY); },
-    clearAdminPassword(){ localStorage.removeItem(ADMIN_KEY); }
   };
 
 })();

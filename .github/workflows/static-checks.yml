@@ -1,0 +1,27 @@
+name: Static prototype checks
+
+on:
+  push:
+    branches:
+      - main
+      - "feat/**"
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node --check client-ledger.js
+      - run: node --check youtube-integration.js
+      - run: npm test
+      - name: Verify admin script references
+        run: grep -q 'youtube-integration.js' admin.html
