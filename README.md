@@ -18,3 +18,12 @@
 - ساختار پروژه را با ابزارهای بیلد ساده مثل Vite تنظیم کنم
 - محتوای داینامیک یا فرم تماس اضافه کنم
 
+
+
+## Security and deployment boundary
+
+This remains a static UI prototype. The local ledger uses browser `localStorage` and is not an authoritative wallet, database, or account system. Never store passwords, private keys, OAuth refresh tokens, or payment credentials in it.
+
+The YouTube Data API key is entered in the browser and is visible to that browser session. Use a dedicated read-only Google API key restricted by HTTP referrer and API scope. Upload permissions require OAuth2 handled by a trusted backend; do not put OAuth client secrets or refresh tokens in static JavaScript.
+
+The admin page loads `youtube-integration.js` from the repository root. The previous `.jsrepo` filename was not a browser-loadable script and has been removed.
