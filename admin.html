@@ -91,12 +91,12 @@
       document.getElementById('yt-stats').textContent = 'در حال دریافت...';
       try{
         const stats = await YouTubeIntegration.fetchChannelStats(key, ch);
-        document.getElementById('yt-stats').innerHTML = `
-          <strong>${stats.title}</strong><br>
-          Subscribers: ${stats.subscriberCount}<br>
-          Views: ${stats.viewCount}<br>
-          Videos: ${stats.videoCount}
-        `;
+        const statsBox = document.getElementById('yt-stats');
+        const title = document.createElement('strong');
+        title.textContent = String(stats.title || 'کانال بدون عنوان');
+        const details = document.createElement('p');
+        details.textContent = `Subscribers: ${Number(stats.subscriberCount).toLocaleString()} · Views: ${Number(stats.viewCount).toLocaleString()} · Videos: ${Number(stats.videoCount).toLocaleString()}`;
+        statsBox.replaceChildren(title, document.createElement('br'), details);
       }catch(e){ document.getElementById('yt-stats').textContent = 'خطا در دریافت آمار: ' + e.message }
     });
 
@@ -104,8 +104,17 @@
     document.getElementById('embed-video').addEventListener('click', () => {
       const id = document.getElementById('yt-video-id').value.trim();
       const container = document.getElementById('yt-embed');
-      if(!id) return alert('Video ID را وارد کنید');
-      container.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${id}" frameborder="0" allowfullscreen></iframe>`;
+      if(!/^[A-Za-z0-9_-]{11}$/.test(id)) return alert('شناسهٔ معتبر ۱۱ کاراکتری ویدئو را وارد کنید');
+      const frame = document.createElement('iframe');
+      frame.width = '100%';
+      frame.height = '100%';
+      frame.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id);
+      frame.title = 'YouTube video player';
+      frame.loading = 'lazy';
+      frame.referrerPolicy = 'strict-origin-when-cross-origin';
+      frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      frame.allowFullscreen = true;
+      container.replaceChildren(frame);
     });
 
     // init
